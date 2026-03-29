@@ -38,106 +38,71 @@ Compare the results and select the best model.
 ```
 /*
 Program to implement Ridge, Lasso, and ElasticNet regularization using pipelines.
-Developed by: 
-RegisterNumber:  
+Developed by: sahana
+RegisterNumber:  25004522
 */
-# Importing necessary libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
+import seaborn as sns 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge, Lasso, ElasticNet
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import mean_squared_error, r2_score
-
-# Load the dataset
-data = pd.read_csv("encoded_car_data (1) (1).csv")
-data.head()
-
-# Data preprocessing
-#data = data.drop(['CarName', 'car_ID'], axis=1)
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+data=pd.read_csv("encoded_car_data (1) (1).csv")
+print(data.head())
 data = pd.get_dummies(data, drop_first=True)
-
-# Splitting the data into features and target variable
-X = data.drop('price', axis=1)
-y = data['price']
-# Standardizing the features
+x=data.drop('price',axis=1)
+y=data['price']
 scaler = StandardScaler()
-X = scaler.fit_transform(X)
+x = scaler.fit_transform(x)
 y = scaler.fit_transform(y.values.reshape(-1, 1))
-
-# Splitting the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Define the models and pipelines
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 models = {
     "Ridge": Ridge(alpha=1.0),
     "Lasso": Lasso(alpha=1.0),
-    "ElasticNet": ElasticNet(alpha=1.0, l1_ratio=0.5)
+    "ElasticNet": ElasticNet (alpha=1.0, l1_ratio=0.5)
 }
-
-# Dictionary to store results
-results = {}
-
-# Train and evaluate each model
-for name, model in models.items():
-    
-    # Create a pipeline with polynomial features and the model
-    pipeline = Pipeline([
-        ('poly', PolynomialFeatures(degree=2)),
-        ('regressor', model)
+result= {}
+result= {}
+for name,model in models.items():
+    pipeline = Pipeline([('poly',PolynomialFeatures(degree=2)),
+    ('regressor',model)
     ])
-    
-    # Fit the model
-    pipeline.fit(X_train, y_train)
-    
-    # Make predictions
-    predictions = pipeline.predict(X_test)
-# Calculate performance metrics
-mse = mean_squared_error(y_test, predictions)
-r2 = r2_score(y_test, predictions)
-
-# Store results
-results[name] = {'MSE': mse, 'R² Score': r2}
-
-# Print results
-print('Name:SAHANA.S ')
-print('Reg. No:25004522 ')
-for model_name, metrics in results.items():
-    print(f"{model_name} - Mean Squared Error: {metrics['MSE']:.2f}, R² Score: {metrics['R² Score']:.2f}")
-
-# Visualization of the results
-# Convert results to DataFrame for easier plotting
-results_df = pd.DataFrame(results).T
+    pipeline.fit(x_train, y_train)
+    predictions = pipeline.predict(x_test)
+    mse = mean_squared_error(y_test, predictions)
+    mae = mean_absolute_error(y_test, predictions)
+    r2 = r2_score(y_test, predictions)
+    result[name] = {'MSE': mse, 'MAE': mae, 'R² Score': r2}
+print('Name: sahana.s')
+print('Reg. No: 25004522')
+for model_name, metrics in result.items():
+    print (f"{model_name} - Mean Squared Error: {metrics['MSE']:.2f}, Mean Absolute Error: {metrics['MAE']:.2f}, R² Score: {metrics['R² Score']:.2f}")
+results_df = pd.DataFrame(result).T
 results_df.reset_index(inplace=True)
 results_df.rename(columns={'index': 'Model'}, inplace=True)
-
-# Set the figure size
 plt.figure(figsize=(12, 5))
-
-# Bar plot for MSE
 plt.subplot(1, 2, 1)
 sns.barplot(x='Model', y='MSE', data=results_df, palette='viridis')
 plt.title('Mean Squared Error (MSE)')
 plt.ylabel('MSE')
 plt.xticks(rotation=45)
-# Bar plot for R² Score
 plt.subplot(1, 2, 2)
 sns.barplot(x='Model', y='R² Score', data=results_df, palette='viridis')
-plt.title('R² Score')
-plt.ylabel('R² Score')
+plt.title('R2 Score')
+plt.ylabel('R2 Score')
 plt.xticks(rotation=45)
-
-# Show the plots
 plt.tight_layout()
 plt.show()
+
 ```
 
 ## Output:
-<img width="653" height="706" alt="image" src="https://github.com/user-attachments/assets/a83bfda6-0caa-4c4a-9349-03b7e12aafa3" />
-<img width="451" height="522" alt="image" src="https://github.com/user-attachments/assets/473abc0a-6aed-41fb-9b24-177eaf1a6bb2" />
+<img width="972" height="530" alt="image" src="https://github.com/user-attachments/assets/51f0aea0-1fc2-47b2-9725-e2f1bd71a8f4" />
+
+<img width="1189" height="490" alt="image" src="https://github.com/user-attachments/assets/17015e43-abd4-45c7-905a-55912465b774" />
 
 
 
